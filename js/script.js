@@ -4,89 +4,118 @@
 
 // ! async await
 
-const row = document.querySelector(".row")
+const row = document.querySelector(".row");
 
-async function fetchData(){
-   try {
-    let response = await fetch('https://api.escuelajs.co/api/v1/products')
-    let data = await response.json()
-    return data
-   } catch (error){
-    console.log(error)
-   }
+let sepet = [];
+
+async function fetchData() {
+  try {
+    let response = await fetch("https://fakestoreapi.com/products");
+    let data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-fetchData()
+fetchData().then((data) => {
+  console.log(data);
 
-    .then(data => {
-
-        console.log(data)
-
-        // for(let i = 0; i < data.length; i++){
-        //     console.log(data[i].title)
-        // }
-
-        let sepet = []
-
-        data.forEach((urun)=> {
-            // console.log(urun.title)
-            const col = document.createElement("div")
-            col.classList.add("col")
-            col.style.width = "250px"
-            // col.style.height = "400px"
+  // for(let i = 0; i < data.length; i++){
+  //     console.log(data[i].title)
+  // }
 
 
-            const card = document.createElement("div")
-            card.style.width = "100%"
-            card.style.height = "100%"
-            card.style.border = "1px solid black"
-            card.style.background = "white"
+  data.forEach((urun) => {
+    // console.log(urun.title)
+    const col = document.createElement("div");
+    col.classList.add("col");
+    col.style.width = "250px";
+    // col.style.height = "400px"
 
-            const imgDiv = document.createElement("div")
-            imgDiv.style.width = "100%"
-            imgDiv.style.height = "250px"
+    const card = document.createElement("div");
+    card.style.width = "100%";
+    card.style.height = "100%";
+    card.style.border = "1px solid black";
+    card.style.background = "white";
 
-            const img = document.createElement("img")
-            img.src = urun.category.image
-            img.style.width = "100%"
-            img.style.height = "100%"
+    const imgDiv = document.createElement("div");
+    imgDiv.style.width = "100%";
+    imgDiv.style.height = "250px";
 
-            const cardBody = document.createElement("div")
-            cardBody.style.width = "100%"
-            cardBody.style.height = "250px"
+    const img = document.createElement("img");
+    img.src = urun.image;
+    img.style.width = "100%";
+    img.style.height = "100%";
 
-            const baslik = document.createElement( "h5")
-            baslik.textContent = urun.title
+    const cardBody = document.createElement("div");
+    cardBody.style.width = "100%";
+    cardBody.style.height = "250px";
 
-            const aciklama = document.createElement("p")
-            aciklama.textContent = `${urun.description}-${urun.price}`
+    const baslik = document.createElement("h5");
+    baslik.textContent = urun.title;
 
-            const btn = document.createElement("button")
-            btn.classList.add("btn","btn-warning")
-            btn.textContent = "Sepete Ekle"
+    const aciklama = document.createElement("p");
+    aciklama.textContent = `${urun.price}`;
 
-            btn.addEventListener("click", () => {
-                console.log(urun)
+    const btn = document.createElement("button");
+    btn.classList.add("btn", "btn-warning");
+    btn.textContent = "Sepete Ekle";
 
-                sepet.push(urun)
+    btn.addEventListener("click", () => {
+      console.log(urun);
 
-                console.log(sepet)
-            })
+      sepet.push(urun);
 
-            cardBody.append(baslik)
-            cardBody.append(aciklama)
-            cardBody.append(btn)
-
-            imgDiv.append(img)
-
-            card.append(imgDiv)
-            card.append(cardBody)
-
-            col.appendChild(card)
-
-
-            row.appendChild(col)
-        })
-
-
+      sepet.forEach(urun => {
+        const urunAdi = document.createElement( "p")
+        urunAdi.textContent = urun.title
+    
+        cart.append(urunAdi)
+    
+    
     })
+
+      let sepetJSON = JSON.stringify(sepet);
+      console.log(sepetJSON);
+
+      localStorage.setItem("sepet", sepetJSON);
+
+      console.log(sepet);
+    });
+
+    cardBody.append(baslik);
+    cardBody.append(aciklama);
+    cardBody.append(btn);
+
+    imgDiv.append(img);
+
+    card.append(imgDiv);
+    card.append(cardBody);
+
+    col.appendChild(card);
+
+    row.appendChild(col);
+  });
+});
+
+// localStorage.clear()
+
+// ! Shopping cartı çekiyoruz
+
+const cartIcon = document.querySelector(".fa-cart-shopping");
+const cart = document.querySelector("#sepet")
+cartIcon.addEventListener("click", () => {
+  cart.classList.toggle("aktif");
+});
+
+let localSepet = localStorage.getItem("sepet")
+let normalSepet = JSON.parse(localSepet)
+
+// console.log(normalSepet)
+
+normalSepet.forEach(urun => {
+    const baslik = document.createElement("p")
+    baslik.textContent = urun.title
+    cart.append(baslik)
+})
